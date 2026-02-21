@@ -79,6 +79,7 @@ def etl_regex(response, date):
     df = df.replace(r'^\s*$', np.nan, regex=True)
     df = df[df["delivery_month"] != "小计"]
     df = df.dropna()
+    df["product_id"] = pd.Series(df["product_id"], dtype="string").str.strip()  # remove whitespace from product codes
 
     df = df.astype({
         "delivery_month": int,
