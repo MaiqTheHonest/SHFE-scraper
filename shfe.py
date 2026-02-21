@@ -6,17 +6,17 @@ import re
 import datetime as dt
 import os
 import timeit
-# import psutil
 
-
-# it's possible to parse the .dat file with all the SHFE data as
-# json but I found it takes at least 40% longer than regex:
+# it's possible to parse the .dat file with SHFE data as json like this:
 
 # def etl_json(response):
 #     inside = response.json()["o_curinstrument"]
 #     df = pd.json_normalize(inside)
 #     df = df[["PRODUCTID", "DELIVERYMONTH", "CLOSEPRICE", "VOLUME", "OPENINTEREST"]]
+#     ...cleaning, processing, etc...
 #     return df
+
+# but I found it takes at least 50% longer than regex:
 
 
 
