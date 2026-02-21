@@ -44,9 +44,16 @@ def etl_regex(response, date):
 
     content = response.content.decode('utf_8-sig')
 
-    tail = content[-30:]
+    if len(content) >= 100:
+        tail = content[-100:]
+    else:
+        tail = content[:]
 
-    report_date = re.findall(r'"(?i:report_date)"\s*:\s*"([^"]*)"', content)[0]
+    matches = re.findall(r'"(?i:report_date)"\s*:\s*"([^"]*)"', tail)
+    if not matches:
+        raise Exception("report date not found")
+
+    report_date = matches[0]
     # print(f"report date = {report_date}")
     assert int(report_date) == int(date), "SHFE futures report date does not match desired (url) date. Check report date to see why it's different from url / menus."
     # the only string type
@@ -105,9 +112,13 @@ def main():
         response=request(current_date)
 
         if response.status_code == 200:
-            df = etl_regex(response, current_date)
-            db = pd.concat([db, df], ignore_index=True)
-            print(f" -> {response.status_code} -> successfully parsed ({i+1}/{n_days})")
+            try:
+                df = etl_regex(response, current_date)
+                db = pd.concat([db, df], ignore_index=True)
+                print(f" -> {response.status_code} -> successfully parsed ({i+1}/{n_days})")
+            except:
+                print(f" -> {response.status_code} -> shfe returned empty list ({i+1}/{n_days})")
+
         elif response.status_code == 404:
             print(f" -> {response.status_code} -> no trades found (weekend or trading holiday) ({i+1}/{n_days})")
 
