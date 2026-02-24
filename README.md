@@ -13,6 +13,6 @@ Inspired by [je-suis-tm](https://github.com/je-suis-tm/web-scraping) who showed 
 
 
 ## Usage
-pip install requirements <br />
+pip install -r requirements.txt <br />
 
 set `start_date` and `end_date` and run `shfe.py`
